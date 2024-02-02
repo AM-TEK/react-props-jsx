@@ -69,10 +69,25 @@ function Header() {
 }
 
 function Menu() {
+    const pizzas = pizzaData;
+    // const pizzas = [];
+    const numPizzas = pizzas.length;
+
     return (
         <main className='menu'>
             <h2>Our menu</h2>
-            <Pizza 
+            
+            {numPizzas > 0 ? (
+                <ul className='pizzas'>
+                    {pizzaData.map((pizza) => (
+                        <Pizza pizzaObj={pizza} key={pizza.name} />
+                    ))}
+                </ul>
+            ) : (
+                <p>We're still working on our menu, come back later.</p>
+            )}
+            
+            {/* <Pizza 
                 name='Pizza Spinaci' 
                 ingredients='Tomato, mozarella, spinach, and ricotta cheese'
                 photoName='pizzas/spinaci.jpg'
@@ -83,21 +98,24 @@ function Menu() {
                 ingredients='Tomato, mushroom'
                 price={12}
                 photoName='pizzas/funghi.jpg'    
-            />
+            /> */}
         </main>
     )
 }
 
 function Pizza(props) {
+
+    if (props.pizzaObj.soldOut) return null;
+
     return (
-        <div className='pizza'>
-            <img src={props.photoName} alt={props.name}/>
+        <li className='pizza'>
+            <img src={props.pizzaObj.photoName} alt={props.pizzaObj.name}/>
             <div>
-                <h3>{props.name}</h3>
-                <p>{props.ingredients}</p>
-                <span>{props.price + 3}</span>
+                <h3>{props.pizzaObj.name}</h3>
+                <p>{props.pizzaObj.ingredients}</p>
+                <span>{props.pizzaObj.price}</span>
             </div>
-        </div>
+        </li>
     )
 }
 
@@ -113,8 +131,21 @@ function Footer() {
     // return React.createElement("footer", null, "We're Open!")
     return (
         <footer className='footer'>
-            {new Date().toLocaleTimeString()}. We're Open!
+            {isOpen ? (
+                <Order closeHour={closeHour} />
+            ) : (
+                <p>We're open between {openHour}:00 and {closeHour}:00</p>
+            )}
         </footer>
+    )
+}
+
+function Order(props) {
+    return (
+        <div className='order'>
+            <p>We're open until {props.closeHour}:00</p>
+            <button className='btn'>Order</button>
+        </div>
     )
 }
 
